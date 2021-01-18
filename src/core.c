@@ -111,7 +111,9 @@ bool run_vm(gb_vm *vm)
 {
     uint16_t prev_pc = vm->state.last_pc;
     vm->state.last_pc = vm->state.pc;
-
+#ifdef INTERPRETER_ONLY
+    __gb_step_cpu(vm);
+#else
     /* compile next block / get cached block */
     if (vm->state.pc < 0x4000) { /* first block */
         if (vm->compiled_blocks[0][vm->state.pc].exec_count == 0) {
@@ -159,7 +161,7 @@ bool run_vm(gb_vm *vm)
         LOG_DEBUG("finished\n");
         free_block(&temp);
     }
-
+#endif
     LOG_DEBUG("ioregs: STAT=%02x LY=%02x IF=%02x IE=%02x\n",
               vm->memory.mem[0xff41], vm->memory.mem[0xff44],
               vm->memory.mem[0xff0f], vm->memory.mem[0xffff]);

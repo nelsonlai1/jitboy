@@ -22,7 +22,7 @@ OUT ?= build
 SHELL_HACK := $(shell mkdir -p $(OUT))
 
 BIN = build/jitboy
-OBJS = core.o gbz80.o lcd.o memory.o emit.o interrupt.o main.o optimize.o audio.o save.o
+OBJS = core.o gbz80.o lcd.o memory.o emit.o interrupt.o main.o optimize.o audio.o save.o interpreter.o
 OBJS := $(addprefix $(OUT)/, $(OBJS))
 deps := $(OBJS:%.o=%.o.d)
 GIT_HOOKS := .git/hooks/applied
@@ -38,6 +38,10 @@ sanitizer: $(BIN)
 debug: CFLAGS += -g -D DEBUG
 debug: DYNASMFLAGS += -D DEBUG
 debug: $(BIN)
+
+#interpreter only
+onlyint: CFLAGS += -D INTERPRETER_ONLY
+onlyint: $(BIN)
 
 $(GIT_HOOKS):
 	@scripts/install-git-hooks

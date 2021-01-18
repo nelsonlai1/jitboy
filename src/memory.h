@@ -46,7 +46,48 @@ typedef struct {
     gb_memory *mem;
 
     // register
-    uint8_t a, b, c, d, e, h, l;
+    union {
+        struct {
+            /* Define specific bits of Flag register */
+            union {
+                struct {
+                    unsigned unused : 4;
+                    unsigned c : 1; /* Carry flag */
+                    unsigned h : 1; /* Half carry flag */
+                    unsigned n : 1; /* Add/sub flag */
+                    unsigned z : 1; /* Zero flag */
+                } f_bits;
+                uint8_t f;
+            };
+            uint8_t a;
+        };
+        uint16_t af;
+    };
+
+    union {
+        struct {
+            uint8_t c;
+            uint8_t b;
+        };
+        uint16_t bc;
+    };
+
+    union {
+        struct {
+            uint8_t e;
+            uint8_t d;
+        };
+        uint16_t de;
+    };
+
+    union {
+        struct {
+            uint8_t l;
+            uint8_t h;
+        };
+        uint16_t hl;
+    };
+    // uint8_t a, b, c, d, e, h, l;
     bool f_subtract;
     uint16_t _sp;
     uint16_t pc;
